@@ -86,10 +86,10 @@ const BlogDetails = () => {
   };
 
   return (
-    <div className="blog-details">
+    <div className="blog-details content">
       <article>
         <h2>{blog.title}</h2>
-        <p>Written by {blog.author}</p>
+        <p className="text-gray-500">Written by {blog.author}</p>
         <div>{blog.body}</div>
         <button onClick={deleteBlog}>Delete blog</button>
       </article>

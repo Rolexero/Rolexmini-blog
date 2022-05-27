@@ -44,19 +44,19 @@ const Home = () => {
             marginTop: "90px",
           }}
         >
-          <BallTriangle color="#f1356d" />
+          <BallTriangle color="#696969" />
         </div>
       );
     }
 
     if (blogs.length === 0) {
-        return <div>
+        return <div className="content">
           No blog to display
         </div>
     } 
 
   return (
-    <div className="home">
+    <div className="home content">
       <h2>All Blogs</h2>
       <BlogList blogs={blogs}/>
     </div>

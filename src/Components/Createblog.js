@@ -71,8 +71,8 @@ const Createblog = () => {
 
 
   return (
-    <div>
-      <div className="create">
+    <>
+      <div className="create content">
         <h2>Add a New Blog</h2>
         <form onSubmit={createPostHandler}>
           <div className={blogTitleClassName}>
@@ -102,7 +102,6 @@ const Createblog = () => {
           </div>
           <label>Blog author:</label>
           <input type="text" required disabled />
-          <ToastContainer closeButton={false}/>
           {loading ? (
             <button disabled>Adding Blog...</button>
           ) : (
@@ -110,7 +109,7 @@ const Createblog = () => {
           )}
         </form>
       </div>
-    </div>
+    </>
   );
 }
 

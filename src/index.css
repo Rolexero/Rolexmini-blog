@@ -45,6 +45,16 @@
     padding: 20px;
 }
 
+.divider {
+    border-bottom: 1px solid gray;
+}
+
+.second {
+    margin-left: 10px;
+    font-size: 17px;
+    color: #060505;
+}
+
 
 /* blog preview */
 

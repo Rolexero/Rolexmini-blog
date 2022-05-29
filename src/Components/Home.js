@@ -1,36 +1,35 @@
 import React, {useState, useEffect} from 'react'
 import BlogList from './BlogList';
-import {getDocs} from 'firebase/firestore'
+import { Audio, BallTriangle } from "react-loader-spinner";
+import { getDocs, doc, deleteDoc } from "firebase/firestore";
 import { collection } from "firebase/firestore";
 import { db } from "../Firebase/Firebase-config";
-import { Audio, BallTriangle } from "react-loader-spinner";
+
+
 
 const Home = () => {
     const [blogs, setBlogs] = useState([]);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
-      useEffect(() => {
-        const postsCollectionRef = collection(db, "Blogpost")
-         ;
-        const getPosts = async()=>{
-          setLoading(true);
-          try {
-              const response = await getDocs(postsCollectionRef);
-              const data = response.docs.map((doc) => ({...doc.data(), id: doc.id}));
-              setBlogs(data);
-          } catch (error) {
-            console.log(error.message)
-          }
-          setLoading(false)
+    useEffect(() => {
+      const postsCollectionRef = collection(db, "Blogpost");
+      const getPosts = async () => {
+        setLoading(true);
+        try {
+          const response = await getDocs(postsCollectionRef);
+          const data = response.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setBlogs(data);
+        } catch (error) {
+          console.log(error.message);
         }
-        getPosts()
-      }, [])
-      
+        setLoading(false);
+      };
+      getPosts();
+    }, []);
 
-    // const handleDelete = (id)=>{
-    //     const newBlog = blogs.filter((blog)=>blog.id !== id)
-    //     setBlogs(newBlog)
-    // }
 
     if (loading) {
       return (

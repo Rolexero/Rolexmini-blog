@@ -3,13 +3,30 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import { Link, useLocation } from "react-router-dom";
-
+import { signOut } from "firebase/auth";
+import { auth } from "../Firebase/Firebase-config";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Navbar({isAuth}) {
+export default function Navbar({isAuth,  setIsAuth}) {
+  const navigate = useNavigate()
+
+        const signUserOut = () => {
+          signOut(auth)
+            .then(() => {
+              localStorage.clear();
+              setIsAuth(false);
+              toast.success("Sign Out successful");
+              navigate('/login')
+            }).catch((err)=>{
+              console.log(err)
+            })
+        };
+
   const navigation = [
     { name: "Home", href: "/" },
     {
@@ -79,7 +96,7 @@ export default function Navbar({isAuth}) {
                         <span className="sr-only">Open user menu</span>
                         <img
                           className="h-8 w-8 rounded-full"
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          src={auth.currentUser.photoURL}
                           alt=""
                         />
                       </Menu.Button>
@@ -94,6 +111,10 @@ export default function Navbar({isAuth}) {
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="divider">
+                          <div className="second">Signed in as {auth.currentUser.displayName}</div>
+                        </div>
+
                         <Menu.Item>
                           {({ active }) => (
                             <Link
@@ -123,6 +144,7 @@ export default function Navbar({isAuth}) {
                         <Menu.Item>
                           {({ active }) => (
                             <Link
+                              onClick={signUserOut}
                               value={active}
                               to="/"
                               className={classNames(

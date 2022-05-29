@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import useInput from '../hooks/useInput';
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../Firebase/Firebase-config";
+import { db, auth } from "../Firebase/Firebase-config";
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 
-const Createblog = () => {
+const Createblog = ({isAuth}) => {
     const postsCollectionRef = collection(db, "Blogpost");
     const [loading, setLoading] = useState(false)
     let navigate = useNavigate()
@@ -50,16 +50,16 @@ const Createblog = () => {
         setLoading(true);
         const post = {
           title: enteredBlogTitle,
-          body: enteredBlogBody
+          body: enteredBlogBody,
+          author: {name: auth.currentUser.displayName, id: auth.currentUser.uid}
         };
         await addDoc(postsCollectionRef, post)
         toast.success('Blog post successfully added')
         resetBlogTitle();
         resetBlogBody();
-        setLoading(false)
         setTimeout(() => {
-                  navigate("/");
-        }, 5000);
+              navigate("/");
+        }, 4000);
       };
 
       const blogTitleClassName = blogTitleInputHasError
@@ -68,6 +68,11 @@ const Createblog = () => {
       const blogBodyClassName = blogBodyInputHasError
         ? "form-control invalid" : '';
 
+useEffect(() => {
+  if (!isAuth) {
+    navigate('/login')
+  }
+}, [isAuth, navigate])
 
 
   return (
@@ -101,7 +106,12 @@ const Createblog = () => {
             )}
           </div>
           <label>Blog author:</label>
-          <input type="text" required disabled />
+          <input
+            type="text"
+            required
+            value={ isAuth && auth.currentUser.displayName}
+            disabled
+          />
           {loading ? (
             <button disabled>Adding Blog...</button>
           ) : (

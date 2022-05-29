@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getDocs } from "firebase/firestore";
 import { collection, getDoc, doc } from "firebase/firestore";
-import { db } from "../Firebase/Firebase-config";
+import { db, auth } from "../Firebase/Firebase-config";
 import { BallTriangle } from "react-loader-spinner";
-import Swal from "sweetalert";
 import Notfound from "./Notfound";
 
-const BlogDetails = () => {
+
+const BlogDetails = ({deleteBlog, isAuth}) => {
   const [blog, setBlog] = useState([]);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
@@ -67,31 +67,14 @@ const BlogDetails = () => {
 
 
 
-  const deleteBlog = (id) => {
-    Swal({
-      title: "Are you sure you want to delete this blog?",
-      text: "Once deleted, you will not be able to revert this!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        Swal("Poof! Your blog post has been deleted!", {
-          icon: "success",
-        });
-      } else {
-        Swal("Your blog post is safe!");
-      }
-    });
-  };
 
   return (
     <div className="blog-details content">
       <article>
         <h2>{blog.title}</h2>
-        <p className="text-gray-500">Written by {blog.author}</p>
+        <p className="text-gray-400 text-sm">Written by {blog.author.name}</p>
         <div>{blog.body}</div>
-        <button onClick={deleteBlog}>Delete blog</button>
+        {isAuth && blog.author.id === auth.currentUser.uid &&  <button onClick={() => deleteBlog(id)}>Delete blog</button>}
       </article>
     </div>
   );
